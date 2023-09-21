@@ -1,0 +1,12 @@
+syntax = "proto3";
+package commercionetworkethermint.commercionetworkethermint;
+
+import "gogoproto/gogo.proto";
+import "commercionetworkethermint/commercionetworkethermint/params.proto";
+
+option go_package = "commercionetwork-ethermint/x/commercionetworkethermint/types";
+
+// GenesisState defines the commercionetworkethermint module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
