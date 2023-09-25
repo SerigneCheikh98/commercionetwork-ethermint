@@ -16,6 +16,8 @@ faucet:
   coins:
   - 5token
   - 100000stake
+genesis:
+  chain_id: "commercioethermint_2023-1"
 validators:
 - name: alice
   bonded: 100000000stake
