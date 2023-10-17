@@ -8,6 +8,11 @@ accounts:
   coins:
   - 10000token
   - 100000000stake
+  - 100000000ETH
+  - 100000000ether
+  - 100000000gwei
+  - 10000000Aphoton
+  - 10000000aphoton
 client:
   openapi:
     path: docs/static/openapi.yml
@@ -16,8 +21,21 @@ faucet:
   coins:
   - 5token
   - 100000stake
+  - 100000000ETH
+  - 100000000ether
+  - 100000000gwei
+  - 10000000Aphoton
+  - 10000000aphoton
 genesis:
   chain_id: "commercioethermint_2023-1"
+  app_state:
+    evm:
+      params:
+        evm_denom: "stake"
 validators:
 - name: alice
   bonded: 100000000stake
+app:
+  evm-rpc:
+    address: 0.0.0.0:8545
+    ws-address: 0.0.0.0:8546

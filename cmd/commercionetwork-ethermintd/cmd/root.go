@@ -14,8 +14,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
+	//ethermintclient "github.com/evmos/ethermint/client"
+	ethermintserver "github.com/evmos/ethermint/server"
+	srvflags "github.com/evmos/ethermint/server/flags"
 	"github.com/cosmos/cosmos-sdk/server"
-	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
+	serverconfig "github.com/evmos/ethermint/server/config"
+	// serverconfig "github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	"github.com/cosmos/cosmos-sdk/snapshots"
 	snapshottypes "github.com/cosmos/cosmos-sdk/snapshots/types"
@@ -119,28 +123,41 @@ func initRootCmd(
 		debug.Cmd(),
 		config.Cmd(),
 		// this line is used by starport scaffolding # root/commands
+		// ethermintclient.ValidateChainID(
+		// 	InitCmd(app.ModuleBasics, app.DefaultNodeHome),
+		// ),
 	)
 
 	a := appCreator{
 		encodingConfig,
 	}
 
-	// add server commands
-	server.AddCommands(
-		rootCmd,
-		app.DefaultNodeHome,
-		a.newApp,
-		a.appExport,
-		addModuleInitFlags,
-	)
+	ethermintserver.AddCommands(rootCmd, ethermintserver.NewDefaultStartOptions(a.newApp, app.DefaultNodeHome), a.appExport, addModuleInitFlags)
+
+	// // add server commands
+	// server.AddCommands(
+	// 	rootCmd,
+	// 	app.DefaultNodeHome,
+	// 	a.newApp,
+	// 	a.appExport,
+	// 	addModuleInitFlags,
+	// )
 
 	// add keybase, auxiliary RPC, query, and tx child commands
 	rootCmd.AddCommand(
 		rpc.StatusCommand(),
 		queryCommand(),
 		txCommand(),
-		keys.Commands(app.DefaultNodeHome),
+		keys.Commands(app.DefaultNodeHome),//ethermintclient.KeyCommands(app.DefaultNodeHome),//keys.Commands(app.DefaultNodeHome),
 	)
+
+	rootCmd, err := srvflags.AddTxFlags(rootCmd)
+	if err != nil {
+		panic(err)
+	}
+
+	// add rosetta
+	//rootCmd.AddCommand(server.RosettaCommand(encodingConfig.InterfaceRegistry, encodingConfig.Marshaler))
 }
 
 // queryCommand returns the sub-command to send queries to the app
